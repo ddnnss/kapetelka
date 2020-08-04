@@ -1,0 +1,22 @@
+from django.contrib import admin
+from .models import *
+
+admin.site.register(Category)
+admin.site.register(CategoryTag)
+admin.site.register(Item)
+admin.site.register(ItemLegend)
+admin.site.register(ItemDifficult)
+admin.site.register(ItemMaterial)
+admin.site.register(ItemRecomendation)
+admin.site.register(ItemRecomendationImage)
+admin.site.register(ItemRecomendationBlockA)
+admin.site.register(ItemRecomendationBlockB)
+admin.site.register(ItemRecomendationStep)
+admin.site.register(ItemRecomendationStepImage)
+admin.site.register(ItemRecomendationSubBlockA)
+admin.site.register(ItemRecomendationSubBlockAItem)
+admin.site.register(ItemRecomendationSubBlockB)
+admin.site.register(ItemRecomendationBlockBImage)
+admin.site.register(Copyright)
+admin.site.register(Terms)
+admin.site.register(FavoriteList)

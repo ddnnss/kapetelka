@@ -1,0 +1,7 @@
+djangorestframework
+django-cors-headers
+drf-yasg
+pillow
+djoser
+pytils
+django-ckeditor

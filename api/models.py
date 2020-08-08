@@ -49,10 +49,16 @@ class Item(models.Model):
     difficulty = models.ForeignKey(ItemDifficult,on_delete=models.SET_NULL, blank=True,null=True,
                                    related_name='difficulty',verbose_name='Сложность')
     name = models.CharField('Название', max_length=255, blank=False, null=True)
+    name_lower = models.CharField('Название', max_length=255, blank=False, null=True,editable=False)
     video_file = models.FileField('Видео локальный файл', max_length=255, blank=True, null=True)
     video_url = models.CharField('Видео ссылка', max_length=255, blank=True, null=True)
     image = models.ImageField('Изображение (xxx x xxx)', upload_to='item/images/', blank=False, null=True)
     is_new = models.BooleanField('Новинка ?', default=False)
+
+    def save(self, *args, **kwargs):
+        self.name_lower = self.name.lower()
+        super(Item, self).save(*args, **kwargs)
+
     def __str__(self):
         return self.name
 
@@ -177,6 +183,23 @@ class FavoriteList(models.Model):
     item = models.ForeignKey(Item,on_delete=models.SET_NULL, blank=False,null=True,
                              verbose_name='Относится к')
     user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=False, null=True,
-                             related_name='user', verbose_name='Относится к')
+                              verbose_name='Относится к')
     def __str__(self):
         return f'Избранное для {self.user.id}'
+
+
+class LastOpen(models.Model):
+    item = models.ForeignKey(Item,on_delete=models.SET_NULL, blank=False,null=True,
+                             verbose_name='Относится к')
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=False, null=True,
+                              verbose_name='Относится к')
+    def __str__(self):
+        return f'Последний посмотренный для {self.user.id}'
+
+
+
+class Message(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=False, null=True,
+                             verbose_name='Относится к')
+    is_support_message = models.BooleanField(default=False)
+    text = models.TextField(blank=True,null=True)

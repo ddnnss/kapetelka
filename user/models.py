@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 
+
 class UserManager(BaseUserManager):
     use_in_migrations = True
     def _create_user(self, email, password, **extra_fields):
@@ -74,5 +75,3 @@ class User(AbstractUser):
     #     else:
     #         return '/static/img/n_a.png'
 
-
-# class Favorite(models.Model):

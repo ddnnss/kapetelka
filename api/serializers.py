@@ -5,11 +5,18 @@ class ItemDifficultySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ItemDifficult
-        fields = ['name','level']
+        fields = ['id','name','level']
+
+class UserMessagesSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Message
+        fields = ['is_support_message','text']
 
 
 class ShortItemSerializer(serializers.ModelSerializer):
     difficulty = ItemDifficultySerializer(many=False)
+
     class Meta:
         model = Item
         fields = ['id','name','image','difficulty']

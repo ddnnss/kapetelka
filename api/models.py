@@ -63,6 +63,7 @@ class Item(models.Model):
         return self.name
 
 
+
 class ItemRecomendation(models.Model):
     item = models.ForeignKey(Item,on_delete=models.SET_NULL, blank=True,null=True,
                              related_name='item_recomendations',verbose_name='Относится к')
@@ -181,7 +182,7 @@ class Terms(models.Model):
 
 class FavoriteList(models.Model):
     item = models.ForeignKey(Item,on_delete=models.SET_NULL, blank=False,null=True,
-                             verbose_name='Относится к')
+                             verbose_name='Относится к',related_name='fav_item')
     user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=False, null=True,
                               verbose_name='Относится к')
     def __str__(self):

@@ -13,13 +13,18 @@ class UserMessagesSerializer(serializers.ModelSerializer):
         model = Message
         fields = ['is_support_message','text']
 
+class ShortFavoriteListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = FavoriteList
+        fields = '__all__'
 
 class ShortItemSerializer(serializers.ModelSerializer):
     difficulty = ItemDifficultySerializer(many=False)
-
+    fav_item = ShortFavoriteListSerializer(many=True)
     class Meta:
         model = Item
-        fields = ['id','name','image','difficulty']
+        fields = ['id','name','image','difficulty','fav_item']
 
 class CategorySerializer(serializers.ModelSerializer):
     items = ShortItemSerializer(many=True)
@@ -30,7 +35,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class FavoriteListSerializer(serializers.ModelSerializer):
     item = ShortItemSerializer(many=False)
     class Meta:
-        model = Category
+        model = FavoriteList
         fields = ['item']
 
 class CategoryTagSerializer(serializers.ModelSerializer):

@@ -2,12 +2,18 @@ from django.db import models
 from pytils.translit import slugify
 from .services import *
 from user.models import User
-class CategoryTag(models.Model):
+from django.urls import reverse
 
+
+class CategoryTag(models.Model):
     name = models.CharField('Название фильтра', max_length=255, blank=False, null=True)
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = 'Фильтр'
+        verbose_name_plural = 'Фильтры'
 
 class Category(models.Model):
     tag = models.ForeignKey(CategoryTag, on_delete=models.SET_NULL, blank=True, null=True, related_name='tags',
@@ -18,6 +24,10 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = 'Категорию'
+        verbose_name_plural = 'Категории'
+
 
 
 class ItemMaterial(models.Model):
@@ -26,11 +36,19 @@ class ItemMaterial(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = 'Материал'
+        verbose_name_plural = 'Материалы'
+
 class ItemLegend(models.Model):
     name = models.CharField('Название условного обозначения', max_length=255, blank=False, null=True)
     value = models.CharField('Значение', max_length=255, blank=False, null=True)
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = 'Условное обозначение'
+        verbose_name_plural = 'Условные обозначения'
 
 class ItemDifficult(models.Model):
     name = models.CharField('Название уровня сложности', max_length=255, blank=False, null=True)
@@ -38,7 +56,9 @@ class ItemDifficult(models.Model):
     def __str__(self):
         return self.name
 
-
+    class Meta:
+        verbose_name = 'Уровень сложности'
+        verbose_name_plural = 'Уровни сложности'
 
 class Item(models.Model):
     author = models.CharField('Автор', max_length=255, blank=True, null=True)
@@ -62,6 +82,10 @@ class Item(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = 'Изделие'
+        verbose_name_plural = 'Изделия'
+
 
 
 class ItemRecomendation(models.Model):
@@ -74,6 +98,10 @@ class ItemRecomendation(models.Model):
     def __str__(self):
         return f'Раздел практические рекомендации для {self.item.name}'
 
+    class Meta:
+        verbose_name = 'Практическая рекомендация'
+        verbose_name_plural = 'Практические рекомендации'
+
 class ItemRecomendationImage(models.Model):
     item_recomendation = models.ForeignKey(ItemRecomendation,on_delete=models.SET_NULL, blank=False, null=True,
                                            related_name='item_recomendation_images', verbose_name='Относится к')
@@ -81,8 +109,13 @@ class ItemRecomendationImage(models.Model):
     image = models.ImageField('Изображение (xxx x xxx)', upload_to='item/recomendation/images/', blank=False, null=True)
     image_text = models.CharField('Текст на картинку',max_length=30, blank=True,null=True)
 
+
     def __str__(self):
-        return f'Иображение раздел практические рекомендации для {self.item_recomendation.id}'
+        return f'Изображение для раздела практические рекомендации  {self.item_recomendation.id}'
+
+    class Meta:
+        verbose_name = 'Изображение для раздела практические рекомендации'
+        verbose_name_plural = 'Изображение для раздела практические рекомендации'
 
 
 class ItemRecomendationBlockA(models.Model):
@@ -98,6 +131,10 @@ class ItemRecomendationBlockA(models.Model):
     def __str__(self):
         return f'Раздел А для {self.item.name}'
 
+    class Meta:
+        verbose_name = 'Раздел А'
+        verbose_name_plural = 'Раздел А'
+
 class ItemRecomendationSubBlockA(models.Model):
     block_a = models.ForeignKey(ItemRecomendationBlockA,on_delete=models.SET_NULL, blank=False, null=True,
                                 related_name='recomendation_sub_blocks_a',
@@ -108,6 +145,10 @@ class ItemRecomendationSubBlockA(models.Model):
     def __str__(self):
         return f'Под раздел А для {self.block_a.name}'
 
+    class Meta:
+        verbose_name = 'Под раздел А'
+        verbose_name_plural = 'Под раздел А'
+
 class ItemRecomendationSubBlockAItem(models.Model):
     block_a = models.ForeignKey(ItemRecomendationSubBlockA,on_delete=models.SET_NULL, blank=False, null=True,
                                 related_name='recomendation_sub_block_a_items',
@@ -117,6 +158,10 @@ class ItemRecomendationSubBlockAItem(models.Model):
 
     def __str__(self):
         return f'Запись для под-раздела А для {self.block_a.name}'
+
+    class Meta:
+        verbose_name = 'Запись для под-раздела А'
+        verbose_name_plural = 'Запись для под-раздела А'
 
 
 class ItemRecomendationBlockB(models.Model):
@@ -131,6 +176,10 @@ class ItemRecomendationBlockB(models.Model):
     def __str__(self):
         return f'Раздел В для {self.item.name}'
 
+    class Meta:
+        verbose_name = 'Раздел В'
+        verbose_name_plural = 'Раздел В'
+
 class ItemRecomendationSubBlockB(models.Model):
     block_b = models.ForeignKey(ItemRecomendationBlockB,on_delete=models.SET_NULL, blank=False, null=True,
                                 related_name='recomendation_sub_blocks_b',
@@ -141,6 +190,10 @@ class ItemRecomendationSubBlockB(models.Model):
     def __str__(self):
         return f'Под раздел B для {self.block_b.name}'
 
+    class Meta:
+        verbose_name = 'Под раздел B'
+        verbose_name_plural = 'Под раздел B'
+
 class ItemRecomendationBlockBImage(models.Model):
     block_b = models.ForeignKey(ItemRecomendationBlockB,on_delete=models.SET_NULL, blank=False, null=True,
                                 related_name='recomendation_sub_block_b_images',
@@ -149,6 +202,10 @@ class ItemRecomendationBlockBImage(models.Model):
 
     def __str__(self):
         return f'Под раздел B для {self.block_b.id}'
+
+    class Meta:
+        verbose_name = 'Изображение для под раздел B'
+        verbose_name_plural = 'Изображение для под раздел B'
 
 class ItemRecomendationStep(models.Model):
     step_number = models.IntegerField('Номер шага', blank=True,null=True)
@@ -159,12 +216,20 @@ class ItemRecomendationStep(models.Model):
     def __str__(self):
         return f'Блок шаг для {self.item.name}'
 
+    class Meta:
+        verbose_name = 'Блок шаг'
+        verbose_name_plural = 'Блок шаг'
+
 class ItemRecomendationStepImage(models.Model):
     step = models.ForeignKey(ItemRecomendationStep,on_delete=models.SET_NULL, blank=False,null=True,
                              related_name='step_images',verbose_name='Относится к')
     image = models.ImageField('Изображение (xxx x xxx)', upload_to='item/step/images/', blank=False, null=True)
     def __str__(self):
         return f'Блок шаг для {self.step.id}'
+
+    class Meta:
+        verbose_name = 'Изображение для блок шаг'
+        verbose_name_plural = 'Изображение для блок шаг'
 
 
 class Copyright(models.Model):
@@ -173,12 +238,20 @@ class Copyright(models.Model):
     def __str__(self):
         return f'Copyright текст'
 
+    class Meta:
+        verbose_name = 'Copyright текст'
+        verbose_name_plural = 'Copyright текст'
+
 
 class Terms(models.Model):
     text = models.TextField('Terms of user agreement текст', blank=True, null=True)
 
     def __str__(self):
         return f'Terms of user agreement текст'
+
+    class Meta:
+        verbose_name = 'Terms of user agreement текст'
+        verbose_name_plural = 'Terms of user agreement текст'
 
 class FavoriteList(models.Model):
     item = models.ForeignKey(Item,on_delete=models.SET_NULL, blank=False,null=True,

@@ -31,7 +31,7 @@ class ItemsList(generics.ListAPIView):
 
 class SearchItem(APIView):
     def get(self, request,query):
-        qs = Item.objects.filter(name_lower__contains=query)
+        qs = Item.objects.filter(name_lower__contains=query.lower())
         serializer = ShortItemSerializer(qs, many=True)
         return Response(serializer.data)
 

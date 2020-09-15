@@ -106,7 +106,7 @@ class UserLastSeenListUpdate(APIView):
 
 class CopyrightText(APIView):
     def get(self,request):
-        qs = Copyright.objects.all().first
+        qs = Copyright.objects.get(id=1)
         serializer = CopyrightSerializer(qs,many=False)
         return Response(serializer.data)
 
@@ -114,6 +114,6 @@ class CopyrightText(APIView):
 
 class TermsText(APIView):
     def get(self, request):
-        qs = Terms.objects.all().first
+        qs = Terms.objects.get(id=1)
         serializer = TermsSerializer(qs, many=False)
         return Response(serializer.data)

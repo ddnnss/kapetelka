@@ -47,12 +47,12 @@ class CategoryTagSerializer(serializers.ModelSerializer):
 class CopyrightSerializer(serializers.ModelSerializer):
     class Meta:
         model = Copyright
-        fields = ['text']
+        fields = '__all__'
 
 class TermsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Terms
-        fields = ['text']
+        fields = '__all__'
 
 class ItemRecomendationSubBlockAItemSerializer(serializers.ModelSerializer):
     class Meta:

@@ -14,14 +14,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'id',
-            'last_login',
-            'avatar',
-            'first_name',
-            'last_name',
-            'phone',
             'email',
-            'birthday',
-            'gender',
                   ]
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -34,9 +27,6 @@ class UserCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = tuple(User.REQUIRED_FIELDS) + (
-            'first_name',
-            'birthday',
-            'gender',
             settings.LOGIN_FIELD,
             User._meta.pk.name,
             "password",

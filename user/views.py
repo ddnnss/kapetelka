@@ -2,13 +2,13 @@ from rest_framework.response import Response
 from rest_framework.views import *
 from rest_framework.permissions import IsAuthenticated
 from .serializers import UserSerializer
+from rest_framework import generics
 
-class GetInfo(APIView):
+class GetUser(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
-    def get(self, request):
-        user = request.user
-        serializer = UserSerializer(user, many=False)
-        return Response(serializer.data)
+    serializer_class = UserSerializer
+    def get_object(self):
+        return self.request.user
 
 
 class UpdateUser(APIView):

@@ -4,116 +4,152 @@ from rest_framework.views import APIView
 from .models import *
 from rest_framework.response import Response
 from rest_framework import generics
+from PIL import Image, ImageDraw,ImageFont
 
 
-class ItemDificultySearch(generics.RetrieveAPIView):
-    queryset = Item.objects.filter()
-    serializer_class = ItemSerializer
+class Suppliers(generics.ListAPIView):
+    serializer_class = SupplierSerializer
+    queryset = Supplier.objects.all()
+
+class SupplierCreate(generics.CreateAPIView):
+    serializer_class = SupplierSerializer
+    queryset = Supplier.objects.all()
+
+class SupplierDelete(generics.DestroyAPIView):
+    serializer_class = SupplierSerializer
+    queryset = Supplier.objects.all()
+
+class SupplierEdit(generics.UpdateAPIView):
+    serializer_class = SupplierSerializer
+    queryset = Supplier.objects.all()
+
+#----------------
+
+class Testers(generics.ListAPIView):
+    serializer_class = TesterSerializer
+    queryset = Tester.objects.all()
 
 
-class ItemDificultyAll(generics.ListAPIView):
-    queryset = ItemDifficult.objects.all()
-    serializer_class = ItemDifficultySerializer
+class TesterCreate(generics.CreateAPIView):
+    serializer_class = TesterSerializer
+    queryset = Tester.objects.all()
 
 
-class ItemDetail(generics.RetrieveAPIView):
-    queryset = Item.objects.filter()
-    serializer_class = ItemSerializer
+class TesterDelete(generics.DestroyAPIView):
+    serializer_class = TesterSerializer
+    queryset = Tester.objects.all()
+
+
+class TesterEdit(generics.UpdateAPIView):
+    serializer_class = TesterSerializer
+    queryset = Tester.objects.all()
+
+#----------------
 
 class Categories(generics.ListAPIView):
-    queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    queryset = Category.objects.all()
 
-class ItemsList(generics.ListAPIView):
+
+class CategoryCreate(generics.CreateAPIView):
+    serializer_class = CategorySerializer
+    queryset = Category.objects.all()
+
+
+class CategoryDelete(generics.DestroyAPIView):
+    serializer_class = CategorySerializer
+    queryset = Category.objects.all()
+
+
+class CategoryEdit(generics.UpdateAPIView):
+    serializer_class = CategorySerializer
+    queryset = Category.objects.all()
+#----------------
+
+class ItemCreate(APIView):
+    def post(self,request):
+        print(request.data)
+        data = request.data
+        cat = Category.objects.get(id=data['category'])
+        print(cat)
+        item_sort = SortItem.objects.create(
+            category_id=int(data['category']),
+            supplier_id=int(data['supplier']),
+            tester_id=int(data['tester']),
+            comment=data['comment'],
+            iid=data['iid'],
+            good_time=data['good_time'],
+            created=data['created_at'],
+            item_number=data['number'],
+
+            name=f'Партия : {data["name"]}'
+
+        )
+        for i in range(1,int(data['number'])+1):
+            Item.objects.create(iid=f"{i:03d}",
+                                name=data["name"],
+                                sort=item_sort
+                                )
+
+        return Response (status=200)
+
+class ItemGetImage(APIView):
+    def post(self,request):
+        print(request.data)
+        item = Item.objects.get(id=int(request.data['id']))
+        print(item)
+        img = Image.new('RGB', (500, 270), color='white')
+        name = f'{item.sort.iid}-{item.iid}.png'
+        font = ImageFont.truetype(font='font.ttf', size=20)
+        d = ImageDraw.Draw(img)
+        d.text((10, 10), item.name, font=font, fill=(0, 0, 0))
+        d.text((10, 40), item.sort.category.name, font=font, fill=(0, 0, 0))
+        d.text((10, 70), f'Дата приема: {item.sort.created}', font=font, fill=(0, 0, 0))
+        d.text((10, 110), f'Срок годности: {item.sort.good_time}', font=font, fill=(0, 0, 0))
+        d.text((10, 140), f'Серия: {item.sort.iid}', font=font, fill=(0, 0, 0))
+        d.text((100, 140), f'{item.iid}', font=font, fill=(0, 0, 0))
+        img.save(f'media/{name}')
+
+        return Response({'path':f'media/{name}'},status=200)
+
+class ItemUpdate(generics.UpdateAPIView):
     queryset = Item.objects.all()
-    serializer_class = ShortItemSerializer
+    serializer_class = ItemSerializer
+
+class Items(generics.ListAPIView):
+    queryset = Item.objects.all()
+    serializer_class = ItemSerializer
 
 
-class SearchItem(APIView):
-    def get(self, request,query):
-        qs = Item.objects.filter(name_lower__contains=query.lower())
-        serializer = ShortItemSerializer(qs, many=True)
-        return Response(serializer.data)
+class Sorts(generics.ListAPIView):
+    queryset = SortItem.objects.all()
+    serializer_class = SortItemSerializer
 
 
-class Tags(generics.ListAPIView):
-    queryset = CategoryTag.objects.all()
-    serializer_class = CategoryTagSerializer
+class SortDelete(generics.DestroyAPIView):
+    serializer_class = SortItemSerializer
+    queryset = SortItem.objects.all()
 
 
-class CategoriesByTag(APIView):
-    def get(self, request,id):
-        qs = Category.objects.filter(tag=id)
-        serializer = CategorySerializer(qs, many=True)
-        return Response(serializer.data)
+class Equips(generics.ListAPIView):
+    queryset = Equiment.objects.all()
+    serializer_class = EquimentSerializer
 
 
-class UserFavoriteList(APIView):
-    def get(self, request):
-        try:
-            qs = FavoriteList.objects.filter(user=request.user)
-            serializer = FavoriteListSerializer(qs, many=True)
-            return Response(serializer.data)
-        except:
-            return Response(status=403)
+class EquipTests(generics.ListAPIView):
+    queryset = EquimentTest.objects.all()
+    serializer_class = EquimentTestSerializer
 
-
-class UserFavoriteAdd(APIView):
-    def post(self, request,id):
-        item,created = FavoriteList.objects.get_or_create(user=request.user, item_id=id)
-        if not created:
-            item.delete()
-            return Response(status=200)
-        else:
-            return Response(status=201)
-
-
-class UserFavoriteClear(APIView):
-    def post(self, request):
-        FavoriteList.objects.filter(user=request.user).delete()
+class EquipTestsCreate(APIView):
+    def post(self,request):
+        print(request.data)
+        data=request.data
+        EquimentTest.objects.create(equipment_id=int(data['equipment']),
+                                    check_date=data['check_date'],
+                                    calibrate_date=data['calibrate_date'],
+                                    test_date=data['test_date'],
+                                    comment=data['comment'],
+                                    )
         return Response(status=200)
-
-
-class UserLastSeenList(APIView):
-    def get(self, request):
-        qs = LastOpen.objects.filter(user=request.user)
-        serializer = FavoriteListSerializer(qs, many=True)
-        return Response(serializer.data)
-
-class UserMessagesList(APIView):
-    def get(self, request):
-        qs = Message.objects.filter(user=request.user)
-        serializer = UserMessagesSerializer(qs, many=True)
-        return Response(serializer.data)
-
-class UserMessageAdd(APIView):
-    def post(self, request):
-        Message.objects.create(user=request.user,text=request.data['text'])
-        return Response(status=201)
-
-
-class UserLastSeenListUpdate(APIView):
-    def post(self, request,id):
-        try:
-            qs = LastOpen.objects.get(user=request.user)
-            qs.item = Item.objects.get(id=id)
-            qs.save()
-            return Response(status=200)
-        except:
-            LastOpen.objects.create(user=request.user,item_id=id)
-            return Response(status=201)
-
-
-class CopyrightText(APIView):
-    def get(self,request):
-        qs = Copyright.objects.get(id=1)
-        serializer = CopyrightSerializer(qs,many=False)
-        return Response(serializer.data)
-
-
-
-class TermsText(APIView):
-    def get(self, request):
-        qs = Terms.objects.get(id=1)
-        serializer = TermsSerializer(qs, many=False)
-        return Response(serializer.data)
+    # serializer_class = EquimentTestSerializer
+    # queryset = EquimentTest.objects.all()

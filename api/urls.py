@@ -3,26 +3,35 @@ from . import views
 from user.views import *
 
 urlpatterns = [
-    path('static/copyright/', views.CopyrightText.as_view()),
-    path('static/terms/', views.TermsText.as_view()),
+    path('suppliers/', views.Suppliers.as_view()),
+    path('supplier/create/', views.SupplierCreate.as_view()),
+    path('supplier/delete/<int:pk>', views.SupplierDelete.as_view()),
+    path('supplier/edit/<int:pk>', views.SupplierEdit.as_view()),
+
+    path('testers/', views.Testers.as_view()),
+    path('tester/create/', views.TesterCreate.as_view()),
+    path('tester/delete/<int:pk>', views.TesterDelete.as_view()),
+    path('tester/edit/<int:pk>', views.TesterEdit.as_view()),
+
     path('categories/', views.Categories.as_view()),
-    path('tags/', views.Tags.as_view()),
+    path('category/create/', views.CategoryCreate.as_view()),
+    path('category/delete/<int:pk>', views.CategoryDelete.as_view()),
+    path('category/edit/<int:pk>', views.CategoryEdit.as_view()),
 
-    path('categories/tag/<int:id>/', views.CategoriesByTag.as_view()),
-    path('item/<int:pk>/', views.ItemDetail.as_view()),
-    path('items/dificulty/<int:pk>/', views.ItemDificultySearch.as_view()),
-    path('item/dificultys/', views.ItemDificultyAll.as_view()),
-    path('items/', views.ItemsList.as_view()),
-    path('search/item/<str:query>', views.SearchItem.as_view()),
-    path('user/favorite/', views.UserFavoriteList.as_view()),
-    path('user/favorite/add/<int:id>', views.UserFavoriteAdd.as_view()),
-    path('user/favorite/clear/', views.UserFavoriteClear.as_view()),
-    path('user/lastseen/', views.UserLastSeenList.as_view()),
-    path('user/messages/', views.UserMessagesList.as_view()),
-    path('user/message/add/', views.UserMessageAdd.as_view()),
+    path('items/', views.Items.as_view()),
+    path('item/create/', views.ItemCreate.as_view()),
+    path('item/get_image/', views.ItemGetImage.as_view()),
+    path('item/edit/<int:pk>', views.ItemUpdate.as_view()),
 
-    path('user/lastseen/update/<int:id>', views.UserLastSeenListUpdate.as_view()),
-    path('user/info/', GetInfo.as_view()),
+
+    path('sorts/', views.Sorts.as_view()),
+    path('sort/delete/<int:pk>', views.SortDelete.as_view()),
+
+    path('equips/', views.Equips.as_view()),
+    path('equip_tests/', views.EquipTests.as_view()),
+    path('equip_test/create/', views.EquipTestsCreate.as_view()),
+
+    path('user/me/', GetUser.as_view()),
     path('user/update/', UpdateUser.as_view()),
 
 ]

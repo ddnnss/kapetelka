@@ -29,16 +29,13 @@ class Testers(generics.ListAPIView):
     serializer_class = TesterSerializer
     queryset = Tester.objects.all()
 
-
 class TesterCreate(generics.CreateAPIView):
     serializer_class = TesterSerializer
     queryset = Tester.objects.all()
 
-
 class TesterDelete(generics.DestroyAPIView):
     serializer_class = TesterSerializer
     queryset = Tester.objects.all()
-
 
 class TesterEdit(generics.UpdateAPIView):
     serializer_class = TesterSerializer
@@ -50,20 +47,38 @@ class Categories(generics.ListAPIView):
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
 
-
 class CategoryCreate(generics.CreateAPIView):
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
-
 
 class CategoryDelete(generics.DestroyAPIView):
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
 
-
 class CategoryEdit(generics.UpdateAPIView):
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
+
+#----------------
+
+class SubCategories(generics.ListAPIView):
+    serializer_class = SubCategorySerializer
+    queryset = SubCategory.objects.all()
+
+class SubCategoryCreate(APIView):
+    def post(self,request):
+        print(request.data)
+        SubCategory.objects.create(name=request.data['name'],category_id=request.data['category'])
+        return Response (status=200)
+
+class SubCategoryDelete(generics.DestroyAPIView):
+    serializer_class = SubCategorySerializer
+    queryset = SubCategory.objects.all()
+
+class SubCategoryEdit(generics.UpdateAPIView):
+    serializer_class = SubCategorySerializer
+    queryset = SubCategory.objects.all()
+
 #----------------
 
 class ItemCreate(APIView):
@@ -73,7 +88,7 @@ class ItemCreate(APIView):
         cat = Category.objects.get(id=data['category'])
         print(cat)
         item_sort = SortItem.objects.create(
-            category_id=int(data['category']),
+            subcategory_id=int(data['subcategory']),
             supplier_id=int(data['supplier']),
             tester_id=int(data['tester']),
             comment=data['comment'],
@@ -103,11 +118,11 @@ class ItemGetImage(APIView):
         font = ImageFont.truetype(font='font.ttf', size=20)
         d = ImageDraw.Draw(img)
         d.text((10, 10), item.name, font=font, fill=(0, 0, 0))
-        d.text((10, 40), item.sort.category.name, font=font, fill=(0, 0, 0))
-        d.text((10, 70), f'Дата приема: {item.sort.created}', font=font, fill=(0, 0, 0))
-        d.text((10, 110), f'Срок годности: {item.sort.good_time}', font=font, fill=(0, 0, 0))
-        d.text((10, 140), f'Серия: {item.sort.iid}', font=font, fill=(0, 0, 0))
-        d.text((100, 140), f'{item.iid}', font=font, fill=(0, 0, 0))
+        d.text((10, 40), f'Категория: {item.sort.subcategory.category.name}', font=font, fill=(0, 0, 0))
+        d.text((10, 70), f'Подкатегория: {item.sort.subcategory.name}', font=font, fill=(0, 0, 0))
+        d.text((10, 100), f'Дата приема: {item.sort.created}', font=font, fill=(0, 0, 0))
+        d.text((10, 130), f'Срок годности: {item.sort.good_time}', font=font, fill=(0, 0, 0))
+        d.text((10, 160), f'Серия: {item.sort.iid}-{item.iid}', font=font, fill=(0, 0, 0))
         img.save(f'media/{name}')
 
         return Response({'path':f'media/{name}'},status=200)
@@ -120,21 +135,35 @@ class Items(generics.ListAPIView):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
 
+#----------------
 
 class Sorts(generics.ListAPIView):
     queryset = SortItem.objects.all()
     serializer_class = SortItemSerializer
 
-
 class SortDelete(generics.DestroyAPIView):
     serializer_class = SortItemSerializer
     queryset = SortItem.objects.all()
 
+#----------------
 
 class Equips(generics.ListAPIView):
     queryset = Equiment.objects.all()
     serializer_class = EquimentSerializer
 
+class EquipCreate(generics.CreateAPIView):
+    queryset = Equiment.objects.all()
+    serializer_class = EquimentSerializer
+
+class EquipDelete(generics.DestroyAPIView):
+    queryset = Equiment.objects.all()
+    serializer_class = EquimentSerializer
+
+class EquipEdit(generics.UpdateAPIView):
+    queryset = Equiment.objects.all()
+    serializer_class = EquimentSerializer
+
+#----------------
 
 class EquipTests(generics.ListAPIView):
     queryset = EquimentTest.objects.all()
@@ -145,11 +174,33 @@ class EquipTestsCreate(APIView):
         print(request.data)
         data=request.data
         EquimentTest.objects.create(equipment_id=int(data['equipment']),
-                                    check_date=data['check_date'],
-                                    calibrate_date=data['calibrate_date'],
-                                    test_date=data['test_date'],
+                                    date_type_id=data['date_type'],
+                                    date=data['date'],
+                                    event=data['event'],
                                     comment=data['comment'],
                                     )
         return Response(status=200)
     # serializer_class = EquimentTestSerializer
     # queryset = EquimentTest.objects.all()
+
+class EquipTestDateTypes(generics.ListAPIView):
+    queryset = EquimentTestDateType.objects.all()
+    serializer_class = EquimentTestDateTypeSerializer
+
+class EquipTestDateTypeCreate(generics.CreateAPIView):
+    queryset = EquimentTestDateType.objects.all()
+    serializer_class = EquimentTestDateTypeSerializer
+
+class EquipTestDateTypeDelete(generics.DestroyAPIView):
+    queryset = EquimentTestDateType.objects.all()
+    serializer_class = EquimentTestDateTypeSerializer
+
+class EquipTestDateTypeEdit(generics.UpdateAPIView):
+    queryset = EquimentTestDateType.objects.all()
+    serializer_class = EquimentTestDateTypeSerializer
+
+#----------------
+
+
+
+

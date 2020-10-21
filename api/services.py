@@ -1,8 +1,8 @@
 from random import choices
 import string
 from PIL import Image
-
 from io import BytesIO
+
 
 def create_slug(char_num):
     """Рандомный slug"""

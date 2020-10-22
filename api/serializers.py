@@ -1,6 +1,10 @@
 from rest_framework import serializers
 from .models import *
 
+class ManufacturerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Manufacturer
+        fields = '__all__'
 
 class SupplierSerializer(serializers.ModelSerializer):
     class Meta:
@@ -51,11 +55,7 @@ class ItemSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class EquimentSerializer(serializers.ModelSerializer):
 
-    class Meta:
-        model = Equiment
-        fields = '__all__'
 
 
 class EquimentTestDateTypeSerializer(serializers.ModelSerializer):
@@ -63,16 +63,32 @@ class EquimentTestDateTypeSerializer(serializers.ModelSerializer):
         model = EquimentTestDateType
         fields = '__all__'
 
+class EquimentSerializerTemp(serializers.ModelSerializer):
+
+    class Meta:
+        model = Equiment
+        fields = '__all__'
 
 class EquimentTestSerializer(serializers.ModelSerializer):
-    equipment = EquimentSerializer(many=False, required=False)
+    equipment = EquimentSerializerTemp(many=False, required=False)
     date_type = EquimentTestDateTypeSerializer(many=False, required=False)
 
     class Meta:
         model = EquimentTest
         fields = '__all__'
 
+class EquimentSerializer(serializers.ModelSerializer):
+    test = EquimentTestSerializer(many=True)
+    class Meta:
+        model = Equiment
+        fields = [
+            'id',
+            'name',
+            'iid',
+            'comment',
+            'test',
 
+        ]
 class SampleTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = SampleType
@@ -91,16 +107,17 @@ class SampleExpirementFieldSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class SampleExpirementSerializer(serializers.ModelSerializer):
-    field = SampleExpirementFieldSerializer(many=False)
+    field = SampleExpirementFieldSerializer(many=True,required=False,read_only=True)
     class Meta:
         model = SampleExpirement
         fields = '__all__'
 
 
 class SampleSerializer(serializers.ModelSerializer):
-    type = SampleTypeSerializer(many=False)
-    state = SampleStateSerializer(many=False)
-    expirement = SampleExpirementSerializer(many=True)
+    type = SampleTypeSerializer(many=False,required=False,read_only=True)
+    state = SampleStateSerializer(many=False,required=False,read_only=True)
+    expirement = SampleExpirementSerializer(many=True,required=False,read_only=True)
+    manufacturer = ManufacturerSerializer(many=False,required=False,read_only=True)
 
     class Meta:
         model = Sample

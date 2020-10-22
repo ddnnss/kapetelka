@@ -3,6 +3,11 @@ from . import views
 from user.views import *
 
 urlpatterns = [
+    path('manufacturers/', views.Manufacturers.as_view()),
+    path('manufacturer/create/', views.ManufacturerCreate.as_view()),
+    path('manufacturer/delete/<int:pk>', views.ManufacturerDelete.as_view()),
+    path('manufacturer/edit/<int:pk>', views.ManufacturerEdit.as_view()),
+
     path('suppliers/', views.Suppliers.as_view()),
     path('supplier/create/', views.SupplierCreate.as_view()),
     path('supplier/delete/<int:pk>', views.SupplierDelete.as_view()),
@@ -46,29 +51,28 @@ urlpatterns = [
     path('equip/delete/<int:pk>', views.EquipDelete.as_view()),
     path('equip/edit/<int:pk>', views.EquipEdit.as_view()),
 
+    path('sample_types/', views.SampleTypes.as_view()),
+    path('sample_type/create/', views.SampleTypeCreate.as_view()),
+    path('sample_type/delete/<int:pk>', views.SampleTypeDelete.as_view()),
+    path('sample_type/edit/<int:pk>', views.SampleTypeEdit.as_view()),
+
+    path('sample_states/', views.SampleStates.as_view()),
+    path('sample_state/create/', views.SampleStateCreate.as_view()),
+    path('sample_state/delete/<int:pk>', views.SampleStateDelete.as_view()),
+    path('sample_state/edit/<int:pk>', views.SampleStateEdit.as_view()),
+
+    path('samples/', views.Samples.as_view()),
+    path('sample/create/', views.SampleCreate.as_view()),
+    path('sample/delete/<int:pk>', views.SampleDelete.as_view()),
+    path('sample/edit/<int:pk>', views.SampleEdit.as_view()),
+    path('sample/close/<int:pk>', views.SampleEdit.as_view()),
+
+    path('sample_expiriments/', views.SampleExpiriments.as_view()),
+    path('sample_expiriment/create/', views.SampleExpirimentCreate.as_view()),
+    path('sample_expiriment/delete/<int:pk>', views.SampleExpirimentDelete.as_view()),
+    path('sample_expiriment/edit/<int:pk>', views.SampleExpirimentEdit.as_view()),
 
 
-    path('sample_types', views.EquipTestsCreate.as_view()),
-    path('sample_type/create/', views.SupplierCreate.as_view()),
-    path('sample_type/delete/<int:pk>', views.SupplierDelete.as_view()),
-    path('sample_type/edit/<int:pk>', views.SupplierEdit.as_view()),
-
-    path('sample_states', views.EquipTestsCreate.as_view()),
-    path('sample_state/create/', views.SupplierCreate.as_view()),
-    path('sample_state/delete/<int:pk>', views.SupplierDelete.as_view()),
-    path('sample_state/edit/<int:pk>', views.SupplierEdit.as_view()),
-
-    path('samples', views.EquipTestsCreate.as_view()),
-    path('sample/create/', views.SupplierCreate.as_view()),
-    path('sample/delete/<int:pk>', views.SupplierDelete.as_view()),
-    path('sample/edit/<int:pk>', views.SupplierEdit.as_view()),
-
-    path('sample_expiriments', views.EquipTestsCreate.as_view()),
-    path('sample_expiriment/create/', views.SupplierCreate.as_view()),
-    path('sample_expiriment/delete/<int:pk>', views.SupplierDelete.as_view()),
-    path('sample_expiriment/edit/<int:pk>', views.SupplierEdit.as_view()),
-
-    path('sample_expiriment_field/create/', views.SupplierCreate.as_view()),
     path('sample_expiriment_field/delete/<int:pk>', views.SupplierDelete.as_view()),
     path('sample_expiriment_field/edit/<int:pk>', views.SupplierEdit.as_view()),
 

@@ -7,6 +7,24 @@ from rest_framework import generics
 from PIL import Image, ImageDraw,ImageFont
 
 
+class Manufacturers(generics.ListAPIView):
+    serializer_class = ManufacturerSerializer
+    queryset = Manufacturer.objects.all()
+
+class ManufacturerCreate(generics.CreateAPIView):
+    serializer_class = ManufacturerSerializer
+    queryset = Manufacturer.objects.all()
+
+class ManufacturerDelete(generics.DestroyAPIView):
+    serializer_class = ManufacturerSerializer
+    queryset = Manufacturer.objects.all()
+
+class ManufacturerEdit(generics.UpdateAPIView):
+    serializer_class = ManufacturerSerializer
+    queryset = Manufacturer.objects.all()
+
+#----------------
+
 class Suppliers(generics.ListAPIView):
     serializer_class = SupplierSerializer
     queryset = Supplier.objects.all()
@@ -201,6 +219,110 @@ class EquipTestDateTypeEdit(generics.UpdateAPIView):
 
 #----------------
 
+class SampleTypes(generics.ListAPIView):
+    serializer_class = SampleTypeSerializer
+    queryset = SampleType.objects.all()
+
+class SampleTypeCreate(generics.CreateAPIView):
+    serializer_class = SampleTypeSerializer
+    queryset = SampleType.objects.all()
+
+class SampleTypeDelete(generics.DestroyAPIView):
+    serializer_class = SampleTypeSerializer
+    queryset = SampleType.objects.all()
+
+class SampleTypeEdit(generics.UpdateAPIView):
+    serializer_class = SampleTypeSerializer
+    queryset = SampleType.objects.all()
+
+#----------------
+
+class SampleStates(generics.ListAPIView):
+    serializer_class = SampleStateSerializer
+    queryset = SampleState.objects.all()
+
+class SampleStateCreate(generics.CreateAPIView):
+    serializer_class = SampleStateSerializer
+    queryset = SampleState.objects.all()
+
+class SampleStateDelete(generics.DestroyAPIView):
+    serializer_class = SampleStateSerializer
+    queryset = SampleState.objects.all()
+
+class SampleStateEdit(generics.UpdateAPIView):
+    serializer_class = SampleStateSerializer
+    queryset = SampleState.objects.all()
+
+#----------------
+
+class SampleExpiriments(generics.ListAPIView):
+    serializer_class = SampleExpirementSerializer
+    queryset = SampleExpirement.objects.all()
+
+class SampleExpirimentCreate(APIView):
+    def post(self,request):
+        print(request.data)
+        newItem = SampleExpirement.objects.create(
+            name=request.data['name'],
+            subject=request.data['subject'],
+            weight=request.data['weight'],
+            iso=request.data['iso'],
+        )
+        for field in request.data['field']:
+            print(field['value'])
+            if field['value'] != '':
+                SampleExpirementField.objects.create(
+                    expiriment=newItem,
+                    name=field['value']
+                )
+
+        return Response(status=200)
+
+    # serializer_class = SampleExpirementSerializer
+    # queryset = SampleExpirement.objects.all()
+
+class SampleExpirimentDelete(generics.DestroyAPIView):
+    serializer_class = SampleExpirementSerializer
+    queryset = SampleExpirement.objects.all()
+
+class SampleExpirimentEdit(generics.UpdateAPIView):
+    serializer_class = SampleExpirementSerializer
+    queryset = SampleExpirement.objects.all()
+
+#----------------
 
 
+class Samples(generics.ListAPIView):
+    serializer_class = SampleSerializer
+    queryset = Sample.objects.all()
 
+class SampleCreate(APIView):
+    def post(self,request):
+        print(request.data)
+        items = Sample.objects.filter(date_get_sample=request.data['date_get_sample'])
+        newItem = Sample.objects.create(
+            iid=f"{len(items)+1:04d}",
+            type_id=request.data['type'],
+            state_id=request.data['state'],
+            manufacturer_id=request.data['manufacturer'],
+            serial_number=request.data['serial_number'],
+            date_get_sample=request.data['date_get_sample'],
+            comment=request.data['comment'],
+
+        )
+        for ex in request.data['expirement']:
+            exp = SampleExpirement.objects.get(id=ex)
+            newItem.expirement.add(exp)
+        return Response(status=200)
+    # serializer_class = SampleSerializer
+    # queryset = Sample.objects.all()
+
+class SampleDelete(generics.DestroyAPIView):
+    serializer_class = SampleSerializer
+    queryset = Sample.objects.all()
+
+class SampleEdit(generics.UpdateAPIView):
+    serializer_class = SampleSerializer
+    queryset = Sample.objects.all()
+
+#----------------

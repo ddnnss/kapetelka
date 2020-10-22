@@ -2,6 +2,15 @@ from django.db import models
 from .services import *
 from user.models import User
 
+class Manufacturer(models.Model):
+    name = models.CharField('Производитель', max_length=255, blank=False, null=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Производитель'
+        verbose_name_plural = 'Производители'
 
 class Supplier(models.Model):
     name = models.CharField('Поставщик', max_length=255, blank=False, null=True)
@@ -106,7 +115,7 @@ class EquimentTestDateType(models.Model):
 
 class EquimentTest(models.Model):
     date_type = models.ForeignKey(EquimentTestDateType, on_delete=models.SET_NULL, blank=True, null=True)
-    equipment = models.ForeignKey(Equiment, on_delete=models.CASCADE, blank=True, null=True)
+    equipment = models.ForeignKey(Equiment, on_delete=models.CASCADE, blank=True, null=True, related_name='test')
     event = models.CharField('Событие', max_length=255, blank=False, null=True)
     comment = models.TextField('Комментарий', blank=True, null=True)
     date = models.DateField(blank=True, null=True)
@@ -128,7 +137,8 @@ class SampleExpirement(models.Model):
 
 
 class SampleExpirementField(models.Model):
-    expiriment = models.ForeignKey(SampleExpirement, on_delete=models.CASCADE, blank=True, null=True)
+    expiriment = models.ForeignKey(SampleExpirement, on_delete=models.CASCADE, blank=True, null=True,
+                                   related_name='field')
     name = models.CharField('Название', max_length=255, blank=False, null=True)
 
 class Sample(models.Model):
@@ -136,9 +146,12 @@ class Sample(models.Model):
     type = models.ForeignKey(SampleType, on_delete=models.CASCADE, blank=True, null=True)
     state = models.ForeignKey(SampleState, on_delete=models.CASCADE, blank=True, null=True)
     expirement = models.ManyToManyField(SampleExpirement, blank=True, null=True)
+    manufacturer = models.ForeignKey(Manufacturer,on_delete=models.CASCADE, blank=True, null=True)
     serial_number = models.CharField('Серийный номер', max_length=255, blank=True, null=True)
     status = models.BooleanField('Статус', default=True)
     comment = models.TextField('Комментарий', blank=True, null=True)
+    date_get_sample = models.DateField(blank=True, null=True)
+    date_close_sample = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return f'{self.iid} - {self.iid}'

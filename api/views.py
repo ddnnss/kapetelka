@@ -325,4 +325,29 @@ class SampleEdit(generics.UpdateAPIView):
     serializer_class = SampleSerializer
     queryset = Sample.objects.all()
 
+class SampleGetImage(APIView):
+    def post(self,request):
+        print(request.data)
+        sample = Sample.objects.get(id=int(request.data['id']))
+        print(sample)
+        expririments = SampleExpirement.objects.filter(sample=sample)
+        print(len(expririments))
+        img = Image.new('RGB', (500, 270+ (len(expririments) + 50)), color='white')
+        name = f'A{sample.date_get_sample}RUSAPROPL{sample.iid}.png'
+        print(name)
+        font = ImageFont.truetype(font='font.ttf', size=20)
+        d = ImageDraw.Draw(img)
+        d.text((10, 10),  f'A{sample.date_get_sample}RUSAPROPL{sample.iid}', font=font, fill=(0, 0, 0))
+        d.text((10, 40), f'{sample.type.name}', font=font, fill=(0, 0, 0))
+        d.text((10, 70), f'{sample.state.name}', font=font, fill=(0, 0, 0))
+        d.text((10, 100), f'{sample.serial_number}', font=font, fill=(0, 0, 0))
+        ii = 30
+        for i in expririments:
+            d.text((10, 100+ii), f'{i.iso} {i.subject} {i.weight}', font=font, fill=(0, 0, 0))
+            ii += 30
+
+        img.save(f'media/{name}')
+
+        return Response({'path':f'media/{name}'},status=200)
+
 #----------------

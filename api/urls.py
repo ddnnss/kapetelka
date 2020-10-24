@@ -66,11 +66,13 @@ urlpatterns = [
     path('sample/delete/<int:pk>', views.SampleDelete.as_view()),
     path('sample/edit/<int:pk>', views.SampleEdit.as_view()),
     path('sample/close/<int:pk>', views.SampleEdit.as_view()),
+    path('sample/get_image/', views.SampleGetImage.as_view()),
 
     path('sample_expiriments/', views.SampleExpiriments.as_view()),
     path('sample_expiriment/create/', views.SampleExpirimentCreate.as_view()),
     path('sample_expiriment/delete/<int:pk>', views.SampleExpirimentDelete.as_view()),
     path('sample_expiriment/edit/<int:pk>', views.SampleExpirimentEdit.as_view()),
+
 
 
     path('sample_expiriment_field/delete/<int:pk>', views.SupplierDelete.as_view()),

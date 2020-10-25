@@ -135,12 +135,31 @@ class ItemGetImage(APIView):
         name = f'{item.sort.iid}-{item.iid}.png'
         font = ImageFont.truetype(font='font.ttf', size=20)
         d = ImageDraw.Draw(img)
-        d.text((10, 10), item.name, font=font, fill=(0, 0, 0))
-        d.text((10, 40), f'Категория: {item.sort.subcategory.category.name}', font=font, fill=(0, 0, 0))
-        d.text((10, 70), f'Подкатегория: {item.sort.subcategory.name}', font=font, fill=(0, 0, 0))
-        d.text((10, 100), f'Дата приема: {item.sort.created}', font=font, fill=(0, 0, 0))
-        d.text((10, 130), f'Срок годности: {item.sort.good_time}', font=font, fill=(0, 0, 0))
-        d.text((10, 160), f'Серия: {item.sort.iid}-{item.iid}', font=font, fill=(0, 0, 0))
+        d.text((10, 10), 'Название:', font=font, fill=(0, 0, 0))
+        d.text((200, 10), item.name, font=font, fill=(0, 0, 0))
+
+        d.text((10, 40), 'Категория: ', font=font, fill=(0, 0, 0))
+        d.text((200, 40), item.sort.subcategory.category.name, font=font, fill=(0, 0, 0))
+
+        d.text((10, 70), 'Подкатегория: ', font=font, fill=(0, 0, 0))
+        d.text((200, 70), item.sort.subcategory.name, font=font, fill=(0, 0, 0))
+
+        d.text((10, 100), 'Дата приема: ', font=font, fill=(0, 0, 0))
+        d.text((200, 100), f'{item.sort.created}', font=font, fill=(0, 0, 0))
+
+        d.text((10, 130), 'Срок годности: ', font=font, fill=(0, 0, 0))
+        d.text((200, 130), f'{item.sort.good_time}', font=font, fill=(0, 0, 0))
+
+        d.text((10, 170), 'Серийный номер: ', font=font, fill=(0, 0, 0))
+        d.text((200, 170), item.iid, font=font, fill=(0, 0, 0))
+
+        d.text((10, 200), 'ID Партии: ', font=font, fill=(0, 0, 0))
+        d.text((200, 200), item.sort.iid, font=font, fill=(0, 0, 0))
+
+        d.text((10, 230), 'ID Товара: ', font=font, fill=(0, 0, 0))
+        d.text((200, 230), f'{item.id}', font=font, fill=(0, 0, 0))
+
+
         img.save(f'media/{name}')
 
         return Response({'path':f'media/{name}'},status=200)

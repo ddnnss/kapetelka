@@ -79,7 +79,7 @@ class SortItem(models.Model):
 
 class Item(models.Model):
     sort = models.ForeignKey(SortItem, on_delete=models.CASCADE, blank=True, null=True, verbose_name='Партия товара')
-    status = models.BooleanField(default=True)
+    status = models.BooleanField(null=True,blank=True,default=None)
     iid = models.CharField('IID', max_length=255, blank=True, null=True)
     name = models.CharField('Название', max_length=255, blank=False, null=True)
     comment = models.TextField('Комментарий', blank=True, null=True)

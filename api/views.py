@@ -108,11 +108,11 @@ class ItemCreate(APIView):
         item_sort = SortItem.objects.create(
             subcategory_id=int(data['subcategory']),
             supplier_id=int(data['supplier']),
-            tester_id=int(data['tester']),
+            tester_id=int(data['tester']) if data['tester'] != '' else None,
             comment=data['comment'],
-            iid=data['iid'],
-            good_time=data['good_time'],
-            created=data['created_at'],
+            iid=data['iid'] if data['iid'] != '' else None,
+            good_time=data['good_time'] if data['good_time'] != '' else None,
+            created=data['created_at'] if data['created_at'] != '' else None,
             item_number=data['number'],
 
             name=f'Партия : {data["name"]}'
@@ -121,7 +121,8 @@ class ItemCreate(APIView):
         for i in range(1,int(data['number'])+1):
             Item.objects.create(iid=f"{i:03d}",
                                 name=data["name"],
-                                sort=item_sort
+                                sort=item_sort,
+                                status=data['status']
                                 )
 
         return Response (status=200)
@@ -131,33 +132,40 @@ class ItemGetImage(APIView):
         print(request.data)
         item = Item.objects.get(id=int(request.data['id']))
         print(item)
-        img = Image.new('RGB', (500, 270), color='white')
+        img = Image.new('RGB', (500, 330), color='white')
         name = f'{item.sort.iid}-{item.iid}.png'
-        font = ImageFont.truetype(font='font.ttf', size=20)
+        font = ImageFont.truetype(font='Gilroy-Regular.ttf', size=20)
+        fontBold = ImageFont.truetype(font='Gilroy-Bold.ttf', size=20)
         d = ImageDraw.Draw(img)
-        d.text((10, 10), 'Название:', font=font, fill=(0, 0, 0))
+        d.text((10, 10), 'Название:', font=fontBold, fill=(0, 0, 0))
         d.text((200, 10), item.name, font=font, fill=(0, 0, 0))
 
-        d.text((10, 40), 'Категория: ', font=font, fill=(0, 0, 0))
+        d.text((10, 40), 'Категория: ', font=fontBold, fill=(0, 0, 0))
         d.text((200, 40), item.sort.subcategory.category.name, font=font, fill=(0, 0, 0))
 
-        d.text((10, 70), 'Подкатегория: ', font=font, fill=(0, 0, 0))
+        d.text((10, 70), 'Подкатегория: ', font=fontBold, fill=(0, 0, 0))
         d.text((200, 70), item.sort.subcategory.name, font=font, fill=(0, 0, 0))
 
-        d.text((10, 100), 'Дата приема: ', font=font, fill=(0, 0, 0))
-        d.text((200, 100), f'{item.sort.created}', font=font, fill=(0, 0, 0))
+        d.text((10, 100), 'Поставщик: ', font=fontBold, fill=(0, 0, 0))
+        d.text((200, 100), f'{item.sort.supplier.name }', font=font, fill=(0, 0, 0))
 
-        d.text((10, 130), 'Срок годности: ', font=font, fill=(0, 0, 0))
-        d.text((200, 130), f'{item.sort.good_time}', font=font, fill=(0, 0, 0))
+        d.text((10, 130), 'Приемщик: ', font=fontBold, fill=(0, 0, 0))
+        d.text((200, 130), f'{item.sort.tester.name if item.sort.tester  else "НЕ УКАЗАНО"}', font=font, fill=(0, 0, 0))
 
-        d.text((10, 170), 'Серийный номер: ', font=font, fill=(0, 0, 0))
-        d.text((200, 170), item.iid, font=font, fill=(0, 0, 0))
+        d.text((10, 170), 'Дата приема: ', font=fontBold, fill=(0, 0, 0))
+        d.text((200, 170), f'{item.sort.created if item.sort.created  else "НЕ УКАЗАНО"}', font=font, fill=(0, 0, 0))
 
-        d.text((10, 200), 'ID Партии: ', font=font, fill=(0, 0, 0))
-        d.text((200, 200), item.sort.iid, font=font, fill=(0, 0, 0))
+        d.text((10, 200), 'Срок годности: ', font=fontBold, fill=(0, 0, 0))
+        d.text((200, 200), f'{item.sort.good_time if item.sort.good_time  else "НЕ УКАЗАНО"}', font=font, fill=(0, 0, 0))
 
-        d.text((10, 230), 'ID Товара: ', font=font, fill=(0, 0, 0))
-        d.text((200, 230), f'{item.id}', font=font, fill=(0, 0, 0))
+        d.text((10, 230), 'Серийный номер: ', font=fontBold, fill=(0, 0, 0))
+        d.text((200, 230), item.iid, font=font, fill=(0, 0, 0))
+
+        d.text((10, 260), 'ID Партии: ', font=fontBold, fill=(0, 0, 0))
+        d.text((200, 260), f'{item.sort.iid if item.sort.iid  else "НЕ УКАЗАНО"}', font=font, fill=(0, 0, 0))
+
+        d.text((10, 290), 'ID Товара: ', font=fontBold, fill=(0, 0, 0))
+        d.text((200, 290), f'{item.id}', font=font, fill=(0, 0, 0))
 
 
         img.save(f'media/{name}')

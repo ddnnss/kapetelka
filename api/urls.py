@@ -27,6 +27,8 @@ urlpatterns = [
     path('subcategory/create/', views.SubCategoryCreate.as_view()),
     path('subcategory/delete/<int:pk>', views.SubCategoryDelete.as_view()),
     path('subcategory/edit/<int:pk>', views.SubCategoryEdit.as_view()),
+    path('subcategory/check/<int:pk>', views.SubCategoryCheck.as_view()),
+    path('subcategory/check/all/', views.SubCategoryCheckAll.as_view()),
 
     path('items/', views.Items.as_view()),
     path('item/create/', views.ItemCreate.as_view()),
@@ -50,6 +52,7 @@ urlpatterns = [
     path('equip/create/', views.EquipCreate.as_view()),
     path('equip/delete/<int:pk>', views.EquipDelete.as_view()),
     path('equip/edit/<int:pk>', views.EquipEdit.as_view()),
+    path('equip/get_image/', views.EquipGetImage.as_view()),
 
     path('sample_types/', views.SampleTypes.as_view()),
     path('sample_type/create/', views.SampleTypeCreate.as_view()),

@@ -33,7 +33,8 @@ class SubCategorySerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'name',
-            'category'
+            'category',
+            'min_number'
         ]
 
 
@@ -87,6 +88,7 @@ class EquimentSerializer(serializers.ModelSerializer):
             'iid',
             'comment',
             'test',
+            'start_work'
 
         ]
 class SampleTypeSerializer(serializers.ModelSerializer):

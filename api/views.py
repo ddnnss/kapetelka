@@ -83,10 +83,43 @@ class SubCategories(generics.ListAPIView):
     serializer_class = SubCategorySerializer
     queryset = SubCategory.objects.all()
 
+class SubCategoryCheckAll(APIView):
+    def get(self, request):
+        subcats = SubCategory.objects.all()
+        responce = []
+        for subcat in subcats:
+            for sort in subcat.sortitem_set.all():
+                items = Item.objects.filter(sort=sort, status=True)
+                print(len(items))
+                if len(items) < subcat.min_number:
+                    responce.append({
+                        'name': sort.name
+                    })
+
+        return Response(responce, status=200)
+class SubCategoryCheck(APIView):
+    def get(self,request,pk):
+        print(pk)
+        subcat = SubCategory.objects.get(id=pk)
+        responce=[]
+
+        for sort in subcat.sortitem_set.all():
+            items = Item.objects.filter(sort=sort,status=True)
+            print(len(items))
+            if len(items) < subcat.min_number   :
+                responce.append({
+                    'name':sort.name
+                })
+
+
+        return Response(responce,status=200)
+
 class SubCategoryCreate(APIView):
     def post(self,request):
         print(request.data)
-        SubCategory.objects.create(name=request.data['name'],category_id=request.data['category'])
+        SubCategory.objects.create(name=request.data['name'],
+                                   category_id=request.data['category'],
+                                   min_number=request.data['min_number'])
         return Response (status=200)
 
 class SubCategoryDelete(generics.DestroyAPIView):
@@ -115,7 +148,7 @@ class ItemCreate(APIView):
             created=data['created_at'] if data['created_at'] != '' else None,
             item_number=data['number'],
 
-            name=f'Партия : {data["name"]}'
+            name=f'{data["name"]}'
 
         )
         for i in range(1,int(data['number'])+1):
@@ -196,9 +229,20 @@ class Equips(generics.ListAPIView):
     queryset = Equiment.objects.all()
     serializer_class = EquimentSerializer
 
-class EquipCreate(generics.CreateAPIView):
-    queryset = Equiment.objects.all()
-    serializer_class = EquimentSerializer
+class EquipCreate(APIView):
+    def post(self, request):
+        print(request.data)
+        data = request.data
+        Equiment.objects.create(
+            name=data['name'],
+            iid=data['iid'],
+            comment=data['comment'],
+            start_work=data['start_work']
+
+                                    )
+        return Response(status=200)
+    # queryset = Equiment.objects.all()
+    # serializer_class = EquimentSerializer
 
 class EquipDelete(generics.DestroyAPIView):
     queryset = Equiment.objects.all()
@@ -244,6 +288,26 @@ class EquipTestDateTypeEdit(generics.UpdateAPIView):
     queryset = EquimentTestDateType.objects.all()
     serializer_class = EquimentTestDateTypeSerializer
 
+
+class EquipGetImage(APIView):
+    def post(self,request):
+        print(request.data)
+        eqip = Equiment.objects.get(id=int(request.data['id']))
+        print(eqip)
+
+        img = Image.new('RGB', (500, 270), color='white')
+        name = f'eqip{eqip.id}.png'
+        font = ImageFont.truetype(font='Gilroy-Regular.ttf', size=20)
+        d = ImageDraw.Draw(img)
+        d.text((10, 10),  f'{eqip.iid}', font=font, fill=(0, 0, 0))
+        d.text((10, 40), f'{eqip.name}', font=font, fill=(0, 0, 0))
+        d.text((10, 70), f'{eqip.comment}', font=font, fill=(0, 0, 0))
+        d.text((10, 100), f'{eqip.start_work}', font=font, fill=(0, 0, 0))
+
+
+        img.save(f'media/{name}')
+
+        return Response({'path':f'media/{name}'},status=200)
 #----------------
 
 class SampleTypes(generics.ListAPIView):
@@ -374,9 +438,10 @@ class SampleGetImage(APIView):
         d.text((10, 40), f'{sample.type.name}', font=font, fill=(0, 0, 0))
         d.text((10, 70), f'{sample.state.name}', font=font, fill=(0, 0, 0))
         d.text((10, 100), f'{sample.serial_number}', font=font, fill=(0, 0, 0))
+        d.text((10, 130), f'{sample.date_get_sample}', font=font, fill=(0, 0, 0))
         ii = 30
         for i in expririments:
-            d.text((10, 100+ii), f'{i.iso} {i.subject} {i.weight}', font=font, fill=(0, 0, 0))
+            d.text((10, 130+ii), f'{i.iso} {i.subject} {i.weight}', font=font, fill=(0, 0, 0))
             ii += 30
 
         img.save(f'media/{name}')

@@ -48,7 +48,7 @@ class Category(models.Model):
 class SubCategory(models.Model):
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True, verbose_name='Категория')
     name = models.CharField('Подкатегория', max_length=255, blank=False, null=True)
-
+    min_number = models.IntegerField(default=0)
     def __str__(self):
         return self.name
 
@@ -100,6 +100,7 @@ class Equiment(models.Model):
     name = models.CharField('Название', max_length=255, blank=False, null=True)
     iid = models.CharField('IID', max_length=255, blank=True, null=True)
     comment = models.TextField('Комментарий', blank=True, null=True)
+    start_work = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return f'{self.iid} - {self.name}'

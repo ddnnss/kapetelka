@@ -34,9 +34,11 @@ urlpatterns = [
     path('item/create/', views.ItemCreate.as_view()),
     path('item/get_image/', views.ItemGetImage.as_view()),
     path('item/edit/<int:pk>', views.ItemUpdate.as_view()),
+    path('items/changestatus/<int:pk>', views.ItemChangeStatus.as_view()),
 
     path('sorts/', views.Sorts.as_view()),
     path('sort/delete/<int:pk>', views.SortDelete.as_view()),
+    path('sort/check/', views.SortCheck.as_view()),
 
     path('equips/', views.Equips.as_view()),
     path('equip_date_type/', views.EquipTests.as_view()),

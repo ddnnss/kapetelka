@@ -5,6 +5,7 @@ from .models import *
 from rest_framework.response import Response
 from rest_framework import generics
 from PIL import Image, ImageDraw,ImageFont
+from datetime import timedelta,datetime
 
 
 class Manufacturers(generics.ListAPIView):
@@ -93,6 +94,7 @@ class SubCategoryCheckAll(APIView):
                 print(len(items))
                 if len(items) < subcat.min_number:
                     responce.append({
+                        'id': subcat.id,
                         'name': sort.name
                     })
 
@@ -108,6 +110,7 @@ class SubCategoryCheck(APIView):
             print(len(items))
             if len(items) < subcat.min_number   :
                 responce.append({
+                    'id':sort.id+subcat.id,
                     'name':sort.name
                 })
 
@@ -159,6 +162,22 @@ class ItemCreate(APIView):
                                 )
 
         return Response (status=200)
+
+class ItemChangeStatus(APIView):
+    def post(self,request,pk):
+        print(request.data)
+        items = Item.objects.filter(sort_id=pk)
+        for item in items:
+            if request.data['status'] == 'Списан':
+                item.status=False
+            if request.data['status'] == 'Ожидание':
+                item.status=None
+            if request.data['status'] == 'В наличии':
+                item.status = True
+            item.save()
+
+        return Response(status=200)
+
 
 class ItemGetImage(APIView):
     def post(self,request):
@@ -223,6 +242,28 @@ class SortDelete(generics.DestroyAPIView):
     serializer_class = SortItemSerializer
     queryset = SortItem.objects.all()
 
+class SortCheck(APIView):
+    def get(self, request):
+        sorts = SortItem.objects.all()
+        responce = []
+        for sort in sorts:
+            print(sort.good_time < datetime.now().date() +timedelta(days=7))
+            if sort.good_time < datetime.now().date() +timedelta(days=7) and not sort.good_time == datetime.now().date():
+                responce.append({
+                    'id':sort.id,
+                    'type':'warning',
+                    'name': sort.name,
+                    'date':sort.good_time
+                })
+            if sort.good_time == datetime.now().date():
+                responce.append({
+                    'id': sort.id,
+                    'type': 'error',
+                    'name': sort.name,
+                    'date': 'сегодня'
+                })
+
+        return Response(responce, status=200)
 #----------------
 
 class Equips(generics.ListAPIView):

@@ -335,6 +335,12 @@ class SampleCreate(APIView):
             serial_number=request.data['serial_number'],
             date_get_sample=request.data['date_get_sample'],
             comment=request.data['comment'],
+            arrived=request.data['arrived'],
+            done=request.data['done'],
+            too_small=request.data['too_small'],
+            broken=request.data['broken'],
+            go_bad=request.data['go_bad'],
+
 
         )
         for ex in request.data['expirement']:
@@ -362,7 +368,7 @@ class SampleGetImage(APIView):
         img = Image.new('RGB', (500, 270+ (len(expririments) + 50)), color='white')
         name = f'A{sample.date_get_sample}RUSAPROPL{sample.iid}.png'
         print(name)
-        font = ImageFont.truetype(font='font.ttf', size=20)
+        font = ImageFont.truetype(font='Gilroy-Regular.ttf', size=20)
         d = ImageDraw.Draw(img)
         d.text((10, 10),  f'A{sample.date_get_sample}RUSAPROPL{sample.iid}', font=font, fill=(0, 0, 0))
         d.text((10, 40), f'{sample.type.name}', font=font, fill=(0, 0, 0))

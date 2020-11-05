@@ -152,6 +152,12 @@ class Sample(models.Model):
     comment = models.TextField('Комментарий', blank=True, null=True)
     date_get_sample = models.DateField(blank=True, null=True)
     date_close_sample = models.DateField(blank=True, null=True)
+    arrived = models.IntegerField('Поступило',blank=True, null=True)
+    done = models.IntegerField('Сделано',blank=True, null=True)
+    too_small = models.IntegerField('Малый объем',blank=True, null=True)
+    broken = models.IntegerField('Скисло',blank=True, null=True)
+    go_bad = models.IntegerField('Непригодны',blank=True, null=True)
+
 
     def __str__(self):
         return f'{self.iid} - {self.iid}'

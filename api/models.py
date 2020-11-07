@@ -100,6 +100,7 @@ class Equiment(models.Model):
     name = models.CharField('Название', max_length=255, blank=False, null=True)
     iid = models.CharField('IID', max_length=255, blank=True, null=True)
     comment = models.TextField('Комментарий', blank=True, null=True)
+    manufactor = models.CharField('Производитель', max_length=255, blank=True, null=True)
     start_work = models.DateField(blank=True, null=True)
 
     def __str__(self):

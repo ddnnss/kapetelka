@@ -278,7 +278,8 @@ class EquipCreate(APIView):
             name=data['name'],
             iid=data['iid'],
             comment=data['comment'],
-            start_work=data['start_work']
+            start_work=data['start_work'],
+            manufactor=data['manufactor']
 
                                     )
         return Response(status=200)
@@ -344,6 +345,7 @@ class EquipGetImage(APIView):
         d.text((10, 40), f'{eqip.name}', font=font, fill=(0, 0, 0))
         d.text((10, 70), f'{eqip.comment}', font=font, fill=(0, 0, 0))
         d.text((10, 100), f'{eqip.start_work}', font=font, fill=(0, 0, 0))
+        d.text((10, 130), f'{eqip.manufactor}', font=font, fill=(0, 0, 0))
 
 
         img.save(f'media/{name}')

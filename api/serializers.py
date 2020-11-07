@@ -88,7 +88,8 @@ class EquimentSerializer(serializers.ModelSerializer):
             'iid',
             'comment',
             'test',
-            'start_work'
+            'start_work',
+            'manufactor',
 
         ]
 class SampleTypeSerializer(serializers.ModelSerializer):

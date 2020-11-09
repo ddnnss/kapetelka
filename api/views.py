@@ -205,10 +205,10 @@ class ItemGetImage(APIView):
         d.text((200, 130), f'{item.sort.tester.name if item.sort.tester  else "НЕ УКАЗАНО"}', font=font, fill=(0, 0, 0))
 
         d.text((10, 170), 'Дата приема: ', font=fontBold, fill=(0, 0, 0))
-        d.text((200, 170), f'{item.sort.created if item.sort.created  else "НЕ УКАЗАНО"}', font=font, fill=(0, 0, 0))
+        d.text((200, 170), f'{item.sort.created.strftime("%d/%m/%Y") if item.sort.created  else "НЕ УКАЗАНО"}', font=font, fill=(0, 0, 0))
 
         d.text((10, 200), 'Срок годности: ', font=fontBold, fill=(0, 0, 0))
-        d.text((200, 200), f'{item.sort.good_time if item.sort.good_time  else "НЕ УКАЗАНО"}', font=font, fill=(0, 0, 0))
+        d.text((200, 200), f'{item.sort.good_time.strftime("%d/%m/%Y") if item.sort.good_time  else "НЕ УКАЗАНО"}', font=font, fill=(0, 0, 0))
 
         d.text((10, 230), 'Серийный номер: ', font=fontBold, fill=(0, 0, 0))
         d.text((200, 230), item.iid, font=font, fill=(0, 0, 0))
@@ -363,12 +363,22 @@ class EquipGetImage(APIView):
         img = Image.new('RGB', (500, 270), color='white')
         name = f'eqip{eqip.id}.png'
         font = ImageFont.truetype(font='Gilroy-Regular.ttf', size=20)
+        fontBold = ImageFont.truetype(font='Gilroy-Bold.ttf', size=20)
         d = ImageDraw.Draw(img)
-        d.text((10, 10),  f'{eqip.iid}', font=font, fill=(0, 0, 0))
-        d.text((10, 40), f'{eqip.name}', font=font, fill=(0, 0, 0))
-        d.text((10, 70), f'{eqip.comment}', font=font, fill=(0, 0, 0))
-        d.text((10, 100), f'{eqip.start_work}', font=font, fill=(0, 0, 0))
-        d.text((10, 130), f'{eqip.manufactor}', font=font, fill=(0, 0, 0))
+        d.text((10, 10), 'С/Н:', font=fontBold, fill=(0, 0, 0))
+        d.text((230, 10), f'{eqip.iid}', font=font, fill=(0, 0, 0))
+
+        d.text((10, 40), 'Название:', font=fontBold, fill=(0, 0, 0))
+        d.text((230, 40), f'{eqip.name}', font=font, fill=(0, 0, 0))
+
+        d.text((10, 70), 'Комментарий:', font=fontBold, fill=(0, 0, 0))
+        d.text((230, 70), f'{eqip.comment}', font=font, fill=(0, 0, 0))
+
+        d.text((10, 100), 'Ввод в эксплуатацию:', font=fontBold, fill=(0, 0, 0))
+        d.text((230, 100), f'{eqip.start_work.strftime("%d/%m/%Y")}', font=font, fill=(0, 0, 0))
+
+        d.text((10, 130), 'Производитель:', font=fontBold, fill=(0, 0, 0))
+        d.text((230, 130), f'{eqip.manufactor}', font=font, fill=(0, 0, 0))
 
 
         img.save(f'media/{name}')
@@ -499,16 +509,31 @@ class SampleGetImage(APIView):
         name = f'A{sample.date_get_sample}RUSAPROPL{sample.iid}.png'
         print(name)
         font = ImageFont.truetype(font='Gilroy-Regular.ttf', size=20)
+        fontBold = ImageFont.truetype(font='Gilroy-Bold.ttf', size=20)
         d = ImageDraw.Draw(img)
-        d.text((10, 10),  f'A{sample.date_get_sample}RUSAPROPL{sample.iid}', font=font, fill=(0, 0, 0))
-        d.text((10, 40), f'{sample.type.name}', font=font, fill=(0, 0, 0))
-        d.text((10, 70), f'{sample.state.name}', font=font, fill=(0, 0, 0))
-        d.text((10, 100), f'{sample.serial_number}', font=font, fill=(0, 0, 0))
-        d.text((10, 130), f'{sample.date_get_sample}', font=font, fill=(0, 0, 0))
+        d.text((10, 10), 'Код', font=fontBold, fill=(0, 0, 0))
+        d.text((200, 10),  f'A{sample.date_get_sample}RUSAPROPL{sample.iid}', font=font, fill=(0, 0, 0))
+
+        d.text((10, 40), 'Тип:', font=fontBold, fill=(0, 0, 0))
+        d.text((200, 40), f'{sample.type.name}', font=font, fill=(0, 0, 0))
+
+        d.text((10, 70), 'Состояние:', font=fontBold, fill=(0, 0, 0))
+        d.text((200, 70), f'{sample.state.name}', font=font, fill=(0, 0, 0))
+
+        d.text((10, 100), 'С/Н:', font=fontBold, fill=(0, 0, 0))
+        d.text((200, 100), f'{sample.serial_number}', font=font, fill=(0, 0, 0))
+
+        d.text((10, 130), 'Дата получения:', font=fontBold, fill=(0, 0, 0))
+        d.text((200, 130), f'{sample.date_get_sample.strftime("%d/%m/%Y")}', font=font, fill=(0, 0, 0))
+
+        d.text((10, 160), 'Испытания:', font=fontBold, fill=(0, 0, 0))
+        j = 1
         ii = 30
         for i in expririments:
-            d.text((10, 130+ii), f'{i.iso} {i.subject} {i.weight}', font=font, fill=(0, 0, 0))
+            d.text((10, 160+ii), f'{j}.', font=fontBold, fill=(0, 0, 0))
+            d.text((30, 160+ii), f'{i.iso} {i.subject} {i.weight}', font=font, fill=(0, 0, 0))
             ii += 30
+            j += 1
 
         img.save(f'media/{name}')
 

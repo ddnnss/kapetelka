@@ -39,6 +39,7 @@ urlpatterns = [
     path('sorts/', views.Sorts.as_view()),
     path('sort/delete/<int:pk>', views.SortDelete.as_view()),
     path('sort/check/', views.SortCheck.as_view()),
+    path('sort/update/<int:pk>', views.SortUpdate.as_view()),
 
     path('equips/', views.Equips.as_view()),
     path('equip_date_type/', views.EquipTests.as_view()),

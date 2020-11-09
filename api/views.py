@@ -242,6 +242,29 @@ class SortDelete(generics.DestroyAPIView):
     serializer_class = SortItemSerializer
     queryset = SortItem.objects.all()
 
+class SortUpdate(APIView):
+    def post(self, request, pk):
+        print(request.data)
+        sort=SortItem.objects.get(id=pk)
+        if request.data.get('status'):
+            items = Item.objects.filter(sort=sort)
+            for item in items:
+                if request.data['status'] == 'Списан':
+                    item.status = False
+                if request.data['status'] == 'Ожидание':
+                    item.status = None
+                if request.data['status'] == 'В наличии':
+                    item.status = True
+                item.save()
+        sort.good_time = request.data['good_time']
+        sort.created = request.data['created']
+        sort.iid = request.data['iid']
+        sort.comment = request.data['comment']
+        sort.save()
+
+        return Response(status=200)
+
+
 class SortCheck(APIView):
     def get(self, request):
         sorts = SortItem.objects.all()

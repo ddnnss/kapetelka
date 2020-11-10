@@ -46,6 +46,7 @@ urlpatterns = [
 
     path('equip_tests/', views.EquipTests.as_view()),
     path('equip_test/create/', views.EquipTestsCreate.as_view()),
+    path('equip_test/delete/<int:pk>', views.EquipTestDelete.as_view()),
 
     path('equip_test_date_types/', views.EquipTestDateTypes.as_view()),
     path('equip_test_date_type/create/', views.EquipTestDateTypeCreate.as_view()),

@@ -337,6 +337,10 @@ class EquipTestsCreate(APIView):
     # serializer_class = EquimentTestSerializer
     # queryset = EquimentTest.objects.all()
 
+class EquipTestDelete(generics.DestroyAPIView):
+    serializer_class = EquimentTestSerializer
+    queryset = EquimentTest.objects.all()
+
 class EquipTestDateTypes(generics.ListAPIView):
     queryset = EquimentTestDateType.objects.all()
     serializer_class = EquimentTestDateTypeSerializer
@@ -369,16 +373,16 @@ class EquipGetImage(APIView):
         d.text((230, 10), f'{eqip.iid}', font=font, fill=(0, 0, 0))
 
         d.text((10, 40), 'Название:', font=fontBold, fill=(0, 0, 0))
-        d.text((230, 40), f'{eqip.name}', font=font, fill=(0, 0, 0))
+        d.text((10, 70), f'{eqip.name}', font=font, fill=(0, 0, 0))
 
-        d.text((10, 70), 'Комментарий:', font=fontBold, fill=(0, 0, 0))
-        d.text((230, 70), f'{eqip.comment}', font=font, fill=(0, 0, 0))
+        d.text((10, 100), 'Комментарий:', font=fontBold, fill=(0, 0, 0))
+        d.text((230, 100), f'{eqip.comment}', font=font, fill=(0, 0, 0))
 
-        d.text((10, 100), 'Ввод в эксплуатацию:', font=fontBold, fill=(0, 0, 0))
-        d.text((230, 100), f'{eqip.start_work.strftime("%d/%m/%Y")}', font=font, fill=(0, 0, 0))
+        d.text((10, 130), 'Ввод в эксплуатацию:', font=fontBold, fill=(0, 0, 0))
+        d.text((230, 130), f'{eqip.start_work.strftime("%d/%m/%Y")}', font=font, fill=(0, 0, 0))
 
-        d.text((10, 130), 'Производитель:', font=fontBold, fill=(0, 0, 0))
-        d.text((230, 130), f'{eqip.manufactor}', font=font, fill=(0, 0, 0))
+        d.text((10, 160), 'Производитель:', font=fontBold, fill=(0, 0, 0))
+        d.text((10, 190), f'{eqip.manufactor}', font=font, fill=(0, 0, 0))
 
 
         img.save(f'media/{name}')

@@ -238,6 +238,13 @@ class Sorts(generics.ListAPIView):
     queryset = SortItem.objects.all()
     serializer_class = SortItemSerializer
 
+
+# class Sorts(APIView):
+#     def get(self, request):
+#         queryset = SortItem.objects.all()
+#         serializer = SortItemSerializer(queryset)
+#         return Response(serializer.data, status=200)
+
 class SortDelete(generics.DestroyAPIView):
     serializer_class = SortItemSerializer
     queryset = SortItem.objects.all()

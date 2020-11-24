@@ -72,6 +72,9 @@ class SortItem(models.Model):
     def __str__(self):
         return self.name
 
+    def get_status_ok_number(self):
+        return self.items.filter(status=True).count()
+
     class Meta:
         verbose_name = 'Партия товаров'
         verbose_name_plural = 'Партии товаров'

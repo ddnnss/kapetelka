@@ -42,6 +42,7 @@ class SortItemSerializer(serializers.ModelSerializer):
     supplier = SupplierSerializer(many=False)
     tester = TesterSerializer(many=False)
     subcategory = SubCategorySerializer(many=False)
+    status_ok_number = serializers.IntegerField(source='get_status_ok_number')
 
     class Meta:
         model = SortItem

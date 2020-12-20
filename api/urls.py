@@ -91,5 +91,6 @@ urlpatterns = [
 
     path('user/me/', GetUser.as_view()),
     path('user/update/', UpdateUser.as_view()),
+    path('mail/send_test', SendTestMail.as_view()),
 
 ]
